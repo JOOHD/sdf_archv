@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>아카이브 검색 &lt; 아카이브 | 서울디자인재단</title>
+
+<!-- 상세에서 이동 전체-->
+<input id="move_all" name="move_all" type="hidden" value="null">
+<!-- 상세에서 이동 연도-->
+<input id="year_move" name="year_move" type="hidden" value="null">
+<!-- 상세에서 이동 탭-->
+<input id="tap_move" name="tap_move" type="hidden" value="null">
+<!--현재페이지-->
+<input id="current_page" name="current_page" type="hidden" value="1">
+<!--하단 연도 탭 값-->
+<input id="year_row_tap_no" name="year_row_tap_no" type="hidden" value="49">
+<!--하단 디자인분류 탭 값-->
+<input id="culture_row_tap_no" name="culture_row_tap_no" type="hidden" value="31||32||33||34||35||36||37||38||39||40||41||42||43||44||45||46||47||48">
+<!--상세검색 낮은 연도 값-->
+<input id="year_under_no" name="year_under_no" type="hidden" value="10">
+<!--상세검색 높은 연도 값-->
+<input id="year_high_no" name="year_high_no" type="hidden" value="49">
+<!--실제 상세검색_categoryCd 값-->
+<input id="search_category_cd1" name="search_category_cd1" type="hidden" value="">
+<!--실제 상세검색_categoryCd2 값-->
+<input id="search_category_cd2" name="search_category_cd2" type="hidden" value="">
+<!--실제 tap_categoryCd 값-->
+<input id="category_cd1" name="category_cd1" type="hidden" value="49">
+<!--실제 tap_categoryCd2 값-->
+<input id="category_cd2" name="category_cd2" type="hidden" value="31||32||33||34||35||36||37||38||39||40||41||42||43||44||45||46||47||48">
+<!--실제 categoryType 값-->
+<input id="category_type" name="category_type" type="hidden" value="A">
+<!--metaId (유형 : 5) 값-->
+<input id="meta_id" name="meta_id" type="hidden" value="5">
+<!--metaval 값-->
+<input id="meta_val" name="meta_val" type="hidden" value="">
+<!--url 복사 사용-->
+<input id="url_address" name="url_address" type="text" value="" style="display:none;">
+
+<script>
+
+$(function(){
+		
+		var url = $(location).attr('href');
+		var urlTabValue = url.split('/')[url.split('/').length - 1].split('#')[1];
+		
+		if(urlTabValue){		
+
+			$('#' + urlTabValue).addClass('on');	
+			$('#' + urlTabValue).next('.org_list_cont').show();	
+		   		
+		} else{
+
+			$('#tab_01').addClass('on');
+			$('#tab_01').next('.org_list_cont').show();
+		
+		}
+		
+	
+		$('.arch_search_toggle').on('click', function(){
+		
+			if($(this).hasClass('on')){
+				$(this).removeClass('on');
+				$('.arch_search_warp').stop().slideUp();
+				$(this).find('.blind').text('축소됨');
+			} else{
+				$(this).addClass('on');
+				$('.arch_search_warp').stop().slideDown();
+				$(this).find('.blind').text('확장됨');
+			}
+		});
+		
+		$(document).on('click','.people_srch_sel_list > a', function(){
+			var _selTxt = $(this).text();
+			//console.log('_selTxt: ' + _selTxt);
+			$('.people_search_select > a').text(_selTxt);
+			$('.people_srch_sel_list').slideUp();
+			$('.people_search_select > a').focus();
+			$('.people_search_select > a').removeClass('on');
+			$('.people_search_select > a').append("<span class='blind'>축소됨</span>");
+		});
+
+		// 상세 통합검색 select
+		$('.srch_filter_each a').append('<span class="blind">축소됨</span>');	
+
+		$(document).on('click','.srch_filter_each > a', function(){
+				$(this).addClass("on");
+				if($(this).hasClass('on')){
+					$(this).removeClass('on');
+					$(this).siblings('.common_filter_list').stop().slideToggle();
+					$(this).find('.blind').text('확장됨');
+					
+				} else{
+					$(this).addClass('on');
+					$('.srch_filter_each > a').siblings('.common_filter_list').stop().slideUp();
+					$(this).find('.blind').text('축소됨');
+				} 
+   		});
+
+		$(document).on("click", ".sType", function(){
+    		var rel = $(this).attr("rel");
+    		$(this).parent(".srch_filter_each").find(".sTypeBtn").text($(this).text());
+			
+		});
+		
+		
+		$(document).on('click','.sType', function(){
+				console.log($(this).text());
+				$(this).closest('.srch_filter_each').find('.sTypeBtn').text($(this).text());
+				$('.common_filter_list').stop().slideUp();
+				$(this).closest('.srch_filter_each').find('.sTypeBtn').append('<span class="blind">축소됨</span>');	
+		});
+	});
+		$('.select.mob > a').on('click', function(){
+	if(!$(this).parent('.select').hasClass('open')){
+		$(this).parent('.select').addClass('open');
+		$(this).siblings('ul').stop().slideDown();
+	} else{
+		$(this).parent('.select').removeClass('open');
+		$(this).siblings('ul').stop().slideUp();
+	}
+
+});
+//---------------------------------------------------------------------------------------------------------------- 상세검색 버튼 
+
+$(document).ready(function(){
+	console.log( '>>> start...' );
+
+});
+
+/* 유형 전체선택 미사용.
+$(document).on('click','#chk_all_type',function() { 
+	if($("#chk_all_type").is(":checked")) $('input[id^="chk_type"]').prop("checked", true);
+	else $('input[id^="chk_type"]').prop("checked", false);
+});
+
+$(document).on('click','input[id^="chk_type"]',function() {
+	var total = $('input[id^="chk_type"]').length;
+	var checked = $("input[id^=chk_type]:checked").length;
+	
+	if(total != checked) $("#chk_all_type").prop("checked", false);
+	else $("#chk_all_type").prop("checked", true); 
+});
+*/
+
+//  초기화 버튼 click
+$(document).on('click','#btn_detail_reset',function(){
+	$('#keyword').val('');
+
+	var total = $('input[name^="chk_type"]').length;
+	var checked = $('input[name^="chk_type"]:checked').length;
+		
+	if(total != checked) $("#chk_all_type").prop("checked", false);
+	else $("#chk_all_type").prop("checked", true); 
+
+	resetCategoryList();
+
+});
+
+function resetCategoryList(){ // depth01, 02 데이터 뿌리기
+
+	$.ajax({
+			type : 'post',
+			url : '/archive/categoryList.html',
+			async : false, // 순차적 데이터 처리
+			success: function (result) {
+
+			// {"categorySeq":26,"categoryName":"디자인사업분류","categoryUpSeq":1}												
+			// depth01 대분류
+
+			/*상세검색 - 디자인사업분류 대분류*/
+			var categoryList = result.list;
+			var categoryDepth01 = '<input type="hidden" id="detail_depth01"  name="detail_depth01" value="" /><a href="javascript:;" class="sTypeBtn">대분류를 선택해주세요.</a><ul class="common_filter_list" id="category_depth01">';
+			var categoryCultureList = [];
+			for(var i=0; i<categoryList.length; i++) {
+
+				var categorySeq = categoryList[i].categorySeq;
+				var categoryName = categoryList[i].categoryName;
+				var categoryUpSeq = categoryList[i].categoryUpSeq;
+
+				if(categoryUpSeq == '26'){
+					categoryDepth01	+='<li><a href="javascript:;" class="sType depth01" data-no="'+categorySeq+'">'+categoryName+'</a></li>';
+					categoryCultureList.push(categoryList[i]);
+				}
+			}
+			categoryDepth01 += '</ul>';
+			$('#category_depth01_box').empty();
+			$('#category_depth01_box').html(categoryDepth01);
+			
+			//중분류 리셋
+			$('#category_depth02').empty();
+			$('#detail_depth02').val('');
+			/*상세검색 - 연도*/
+			var catagoryYearDepth01 = '';
+			var catagoryYearDepth02 = '';
+			var categoryYearList = [];
+			for(var i=0; i<categoryList.length; i++) {
+				var categorySeq = categoryList[i].categorySeq;
+				var categoryName = categoryList[i].categoryName;
+				var categoryUpSeq = categoryList[i].categoryUpSeq;
+				
+				if(categoryUpSeq == '9'){
+					//낮은 연도는 가장 높은 연도를 제외 시킨다.
+					if(categoryList[i].categorySeq != categoryList[categoryList.length-1].categorySeq){
+						catagoryYearDepth01	+='<li><a href="javascript:;"  class="sType depthYear01_under" data-no="'+categorySeq+'" >'+categoryName+'</a></li>';
+					}
+				
+					//높은 연도는 가장 낮은 연도를 제외시킨다.
+					if(categorySeq != '10'){
+						catagoryYearDepth02	+='<li><a href="javascript:;"  class="sType depthYear01_high" data-no="'+categorySeq+'" >'+categoryName+'</a></li>';
+					}
+					categoryYearList.push(categoryList[i]);
+				}
+			}
+			$('#catagory_year_depth01').html(catagoryYearDepth01);
+			$('#catagory_year_depth02').html(catagoryYearDepth02);
+			
+			//가장 낮은 연도 값 input 디폴트
+			$('#year_depth01').val(categoryYearList[0].categorySeq);
+			$('#year_under_no').val(categoryYearList[0].categorySeq);
+			$('#under_year_text').text(categoryYearList[0].categoryName);
+			//가장 높은 연도 값 input 디폴트
+			$('#year_depth02').val(categoryYearList[categoryYearList.length - 1].categorySeq);
+			$('#year_high_no').val(categoryYearList[categoryYearList.length - 1].categorySeq);
+			$('#high_year_text').text(categoryYearList[categoryYearList.length - 1].categoryName);
+									
+		},
+		error  : function (data, status, err) {
+			$('.loading-wrap').fadeOut();
+			alert('서버 통신 중 오류가 발생되었습니다.');
+		}
+	});
+}
+
+				
+// case 1 : 키워드 검색어 입력 후, 검색 버튼 click
+$(document).on('click','#btn_keyword_srch',function(){
+	//$("#year_row_tap_all").trigger("click");
+	
+
+	// 키워드 입력 값 가져오기
+	var keyword = $('#keyword').val();
+	if(keyword == '') {
+		alert('키워드를 입력해주세요.');
+		return false;
+
+	}
+	//탭 초기화
+	$('#category_cd1').val('');
+	$('#category_cd2').val('');
+	cultureRowTapAllSetting();
+	yearRowtapSetting();
+	$('#current_page').val('1');
+
+	$('#year_row_tap_all').addClass('on');
+	$('.year_row_tap_all').attr('title', '선택됨');
+
+	$('.loading-wrap').fadeIn(); // 로딩바 생성
+	var data = {};
+	data['keyword'] = keyword;
+
+	// searchAjax 함수 호출
+	searchAjax(data);
+});
+
+//  case 2 : 상세검색 선택 후, 검색 버튼 click
+$(document).on('click','#btn_detail_search', function() {
+	// 키워드 입력 값 가져오기
+
+
+	var keyword = $('#keyword').val();
+	if(keyword == '') {
+		alert('키워드를 입력해주세요.');
+		return false;
+	}
+	//탭 초기화
+	$('#category_cd1').val('');
+	$('#category_cd2').val('');
+	cultureRowTapAllSetting();
+	yearRowtapSetting();
+	$('#year_row_tap_all').addClass('on');		
+	$('#year_row_tap_all').attr('title', '선택됨');
+
+	var cultureCd01 = $('#detail_depth01').val();
+	var cultureCd02 = $('#detail_depth02').val();
+	var yearUnderNo = $('#year_under_no').val();
+	var yearHighNo = $('#year_high_no').val();
+	
+	var searchMode = true;
+	
+	var searchMode2 = yearUnderNo <= yearHighNo ? true : false; 
+	if(searchMode && searchMode2){
+
+		$.ajax({
+			type : 'post',
+			url : '/archive/categoryList.html',
+			data : data,
+			async : false, // 순차적 데이터 처리
+			success: function (result) {
+				
+				$('.loading-wrap').fadeIn(); // 로딩바 생성
+				//연도 검색 전 셋팅
+				var categoryList = result.list;
+
+				//연도 카테고리만 가져오기
+				var categoryYearList = [];
+				for(var i=0; i<categoryList.length; i++) {
+					var categoryUpSeq = categoryList[i].categoryUpSeq;
+					if(categoryUpSeq == '9'){
+							categoryYearList.push(categoryList[i]);
+					}
+				}
+
+				//낮은 연도 default
+				if(yearUnderNo == ''){
+					yearUnderNo = categoryYearList[0].categorySeq;
+				}
+
+				//높은 연도 default
+				if(yearHighNo == ''){
+					yearHighNo = categoryYearList[categoryYearList.length-1].categorySeq;
+				}
+
+				//포함연도만 가져오기
+				var catagoryCdVal = '';
+				var categoryCdValList = []; //포함연도
+				for(var i=0; i<categoryYearList.length; i++) {
+
+					var categorySeq = categoryYearList[i].categorySeq;
+					var categoryName = categoryYearList[i].categoryName;
+					var categoryUpSeq = categoryYearList[i].categoryUpSeq;
+					if(categoryUpSeq == '9'){
+						if(yearUnderNo <= categorySeq && yearHighNo >= categorySeq){
+							categoryCdValList.push(categorySeq);
+						}
+					}
+				}
+				var categoryCdVal= categoryCdValList.join('||');
+				
+				//유형 부분 세팅
+				var metaValueList = [];
+				$(document).find('.chk_type').each(function(index,item){
+						if($(this).is(':checked')){
+							var metaValue = $(this).data('value');
+							metaValueList.push(metaValue);
+						}
+				});
+				var metaValues = metaValueList.join('||');
+
+				//메타 value값 셋팅
+				$('#meta_val').val(metaValues);
+				//연도 카테고리 값 세팅
+				$('#search_category_cd1').val(categoryCdVal);
+				//컬쳐 카테고리 값 세팅;
+				if(cultureCd02 != ''){
+					$('#search_category_cd2').val(cultureCd02);
+				}else if(cultureCd01 != '' && cultureCd02 == ''){
+					datailCultureSetting(cultureCd01);
+				}else{
+					datailCultureAllSetting();
+				}
+				//현재페이지 값 셋팅
+				$('#current_page').val(1);
+
+				searchDetailAjax();
+
+			},
+			error  : function (data, status, err) {
+				$('.loading-wrap').fadeOut();
+				alert('서버 통신 중 오류가 발생되었습니다.');
+			}
+		});
+	}
+	if(!searchMode2){
+		alert('연도를 순차적으로 선택해 주세요.');
+	}
+
+});
+
+//디자인문화분류 대분류 세팅
+function detailCultureSetting(no){
+		if(no === 'undefinde' || no == ''){
+			no = '';
+		} 
+
+		var data = {};
+		data['up_seq'] = no;
+		$.ajax({
+				type : 'post',
+				url : '/archive/categoryList.html',
+				data : data,
+				async : false, // 순차적 데이터 처리
+				success: function (result) {
+
+				/*상세검색 - 디자인사업분류 대분류*/
+				var categoryList = result.list;
+				var categoryCultureList = [];
+
+				//리턴 카테고리 - 전체
+				for(var i=0; i<categoryList.length; i++) {
+						categoryCultureList.push(categoryList[i]);
+				}
+
+				/*하단 중분류 모든 목록*/
+				var cultureRowTapNoList = [];
+				var cultureRowTapNos = '';
+				for(var i=0; i<categoryCultureList.length; i++) {
+					var categorySeq = categoryCultureList[i].categorySeq;
+					cultureRowTapNoList.push(categorySeq);
+					
+				}
+				
+				var cultureRowTapNos =  cultureRowTapNoList.join('||');
+
+				$('#search_category_cd2').val(cultureRowTapNos);
+
+			},
+			error  : function (data, status, err) {
+				$('.loading-wrap').fadeOut();
+				alert('서버 통신 중 오류가 발생되었습니다.');
+			}
+		});
+}
+//디자인문화분류 대분류 탭 세팅
+function detailCultureAllSetting(){
+
+		$.ajax({
+				type : 'post',
+				url : '/archive/categoryList.html',
+				data : data,
+				async : false, // 순차적 데이터 처리
+				success: function (result) {
+
+				/*상세검색 - 디자인사업분류 대분류*/
+				var categoryList = result.list;
+				var categoryDepth01 = '';
+				var categoryCultureList = [];
+
+				//대분류 카테고리 - 전체
+				for(var i=0; i<categoryList.length; i++) {
+					var categoryUpSeq = categoryList[i].categoryUpSeq;
+					if(categoryUpSeq == '26'){
+						categoryCultureList.push(categoryList[i]);
+					}
+				}
+
+				/*하단 - 디자인사업분류 대분류 , 중분류 모든 목록*/
+				var cultureRowTapNoList = [];
+				var cultureRowTapNos = '';
+				for(var i=0; i<categoryCultureList.length; i++) {
+
+					var categorySeq = categoryCultureList[i].categorySeq;
+					for(var j=0; j<categoryList.length; j++) {
+						var categorySeq02 = categoryList[j].categorySeq;
+						var categoryName02 = categoryList[j].categoryName;
+						var categoryUpSeq02 = categoryList[j].categoryUpSeq;		
+						if(categorySeq == categoryUpSeq02){
+							cultureRowTapNoList.push(categorySeq02);
+						}
+					}
+				}
+				
+				var cultureRowTapNos =  cultureRowTapNoList.join('||');
+
+				$('#search_category_cd2').val(cultureRowTapNos);
+
+			},
+			error  : function (data, status, err) {
+				$('.loading-wrap').fadeOut();
+				alert('서버 통신 중 오류가 발생되었습니다.');
+			}
+		});
+}
+
+
+// ---------------------------------------------------------------------------------------- 하단
+
+function searchAjax() {	// 키워드 옆 검색버튼 클릭 시, 
+
+	$('#meta_val').val('');
+ 	var data = {};
+	data['current_page'] = $('#current_page').val();
+	data['keyword'] = $('#keyword').val();
+	yearRowTapAllSetting();
+	var cultureRowTapNo = $('#culture_row_tap_no').val();
+	var yearRowTapNo = $('#year_row_tap_no').val();
+
+	data['category_cd1'] = $('#category_cd1').val();
+		$.ajax({
+			type : 'post',
+			url : '/archive/search.html',
+			data : data,
+			async : false, // 순차적 데이터 처리
+			success: function (result) { // $(selector).data(key) key를 생략하고 호출경우, 저장된 모든 data들이 json형식으로 리턴된다.
+
+				$('#archiveList').empty(); // archiveList 초기화
+				$('.loading-wrap').fadeOut(); // 로딩바 지우기
+				var status = result.status;		
+				if(status != 'EMPTY') {
+					$("#no_arch_wrap").hide(); //검색결과 있을 시에
+					$('#arch_wrap').show();
+					var list = result.apiContentsList;
+					var html = '';
+					var count = result.apiContentsListCount;
+					
+							$.ajax({
+								type : 'post',
+								url : '/archive/categoryList.html',
+								data : data,
+								async : false, // 순차적 데이터 처리
+								success: function (result) {
+								var categoryList = result.list;
+
+								var categoryCultureList = [];
+								for(var i=0; i<categoryList.length; i++) {
+									var categoryUpSeq = categoryList[i].categoryUpSeq;
+									if(categoryUpSeq == '26'){
+										categoryCultureList.push(categoryList[i]);
+									}
+								}
+								
+								var categoryCultureRowList=[];
+								for(var i=0; i<categoryList.length; i++) {
+									var categoryUpSeq = categoryList[i].categoryUpSeq;
+									for(var j=0; j<categoryCultureList.length; j++){
+										if(categoryCultureList[j].categorySeq == categoryUpSeq){
+											categoryCultureRowList.push(categoryList[i]);
+										}
+									}
+								}
+
+							for(var i=0; i<list.length; i++) {
+								
+								console.log(list[i] + '<br>');
+
+								var contentsTitle = list[i].contentsTitle;			// 컨텐츠 제목
+								var contentsId = list[i].contentsId;			    // 컨텐츠 아이디
+								var categoryCd = list[i].categoryCd1;				// 연도별카테고리 코드
+								var categoryName1 = list[i].categoryName1;				// 연도별 이름
+								var categoryCd2 = list[i].categoryCd2;			    // 디자인 사업 분류
+								var categoryName2 = list[i].categoryName2;			    // 디자인 사업 분류
+								var reprImgFileUrl = list[i].reprImgFileUrl;		// 썸네일 url
+								var contensViewUrl = list[i].contensViewUrl;	    // 상세 보기 페이지 url
+								var cultureName = '';
+								/*
+								for(var i=0; i<categoryCultureRowList.length; i++) {
+									var categorySeqNum = categoryCultureRowList[i].categorySeq;
+										if(categorySeqNum == categoryCd2){
+											for(var j=0; j<categoryCultureList.length; j++){
+												if(categoryCultureList[j].categorySeq == categoryCultureRowList[i].categoryUpSeq){
+													cultureName = categoryCultureList[j].categoryName;
+												}
+											}
+										}
+								}
+								*/
+								//중분류 코드로 대분류 찾기
+								html += '<li>';
+								html += '	<a href="javascript:;" class="sbj title goDetail" data-no="'+contentsId+'">';
+								html += '		<span class="img_box">';	 
+								html += '			<img class="for_web" src="https://seouldesign.or.kr/tigenweb'+reprImgFileUrl+'" alt="">';
+								html += '			<img class="for_mob" src="https://seouldesign.or.kr/tigenweb'+reprImgFileUrl+'" alt="">';
+								html += '		</span>';
+								html += '<div class="prog_sched_txt">';
+								html += '<div class="flag">';
+								html += '<p>'+categoryName2+'</p>';
+								html += '</div>';
+								html += '<strong>'+contentsTitle+'</strong>';
+								html += '<span>'+categoryName1+'</span>';
+								html += '</div>';
+								html += '</a>';
+								html += '<div class="share_btns">';
+								html += '<a class="btn_share" href="javascript:;" role="button" aria-label="공유하기">';
+								html += '</a>';
+								html += ' <!-- sns 팝업 -->';
+								html += '<div class="sns_pop prog_sched" style="display: none; opacity: 1;">';
+								html += '<i></i>';
+								html += '<a class="sns_pop_close" href="javascript:;" role="button" aria-label="팝업 닫기">팝업 닫기</a>';
+								html += '<strong>SNS 공유하기</strong>';
+								html += '<div class="sns_pop_btns">';
+								html += '<a class="fb" href="javascript:;" onclick="shareSNS(this, \''+contentsTitle+'\')" title="새창열림" role="button" aria-label="페이스북으로 공유하기">페이스북</a>';
+								html += '<a class="kt" href="javascript:;" onclick="shareSNS(this, \''+contentsTitle+'\')" title="새창열림" role="button" aria-label="카카오톡으로 공유하기">카카오톡</a>';
+								html += '<a class="tw" href="javascript:;" onclick="shareSNS(this, \''+contentsTitle+'\')" title="새창열림" role="button" aria-label="트위터로 공유하기">트위터</a>';
+								html += '<a class="bl" href="javascript:;" onclick="shareSNS(this, \''+contentsTitle+'\')" title="새창열림" role="button" aria-label="블로그로 공유하기">블로그</a>';
+								html += '</div>';
+								html += '<strong></strong>';
+								html += '<div class="url_copy">';
+								html += '<input readonly="readonly" type="text" value="https://seouldesign.or.kr/?menuno=440&contents_id='+contentsId+'">';
+								html += '<a class="url_copy_btn" href="javascript:;" data-url="https://seouldesign.or.kr/?menuno=440&contents_id='+contentsId+'" title="URL 정보">복사</a>';
+								html += '</div>';
+								html += '</div>';
+								html += ' <!-- sns 팝업 end -->';
+								html += '</div>';
+								html += '</li>';
+							}
+						
+							$('#archiveList').append(html);
+							$('.pagination_wrap').show();
+							var currentPage = $('#current_page').val();
+							var blockCount = 8;
+							var pageBlockSize =5;
+							paging(count,currentPage,blockCount,pageBlockSize);
+							
+							},
+							error  : function (data, status, err) {
+								$('.loading-wrap').fadeOut();
+								alert('서버 통신 중 오류가 발생되었습니다.');
+							}
+							});
+
+				}else{
+					$("#no_arch_wrap").show(); //검색결과 없을시
+					$('#arch_wrap').hide();
+					$('.pagination_wrap').hide();
+				}
+		},
+		error  : function (data, status, err) {
+			$('.loading-wrap').fadeOut();
+			alert('서버 통신 중 오류가 발생되었습니다.');
+		}
+	});
+	
+}
+
+//탭 클릭시
+function tapAjax() {
+	$('.loading-wrap').fadeIn(); // 로딩바 생성
+	$('#meta_val').val('');
+ 	var data = {};
+	data['keyword'] = $('#keyword').val();
+	data['current_page'] = $('#current_page').val();
+
+	var cultureRowTapNo = $('#culture_row_tap_no').val();
+	var yearRowTapNo = $('#year_row_tap_no').val();
+	settingCategoryCd(yearRowTapNo,cultureRowTapNo);
+
+	data['category_cd1'] = $('#category_cd1').val();
+	data['category_cd2'] = $('#category_cd2').val();
+	data['category_type'] = $('#category_type').val();
+		$.ajax({
+			type : 'post',
+			url : '/archive/search.html',
+			data : data,
+			async : false, // 순차적 데이터 처리
+			success: function (result) { // $(selector).data(key) key를 생략하고 호출경우, 저장된 모든 data들이 json형식으로 리턴된다.
+
+				$('#archiveList').empty(); // archiveList 초기화
+				$('.loading-wrap').fadeOut(); // 로딩바 지우기
+				var status = result.status;		
+				if(status != 'EMPTY') {
+					$("#no_arch_wrap").hide(); //검색결과 있을 시에
+					$('#arch_wrap').show();
+					var list = result.apiContentsList;
+					var html = '';
+					var count = result.apiContentsListCount;
+
+							$.ajax({
+								type : 'post',
+								url : '/archive/categoryList.html',
+								data : data,
+								async : false, // 순차적 데이터 처리
+								success: function (result) {
+								var categoryList = result.list;
+
+								var categoryCultureList = [];
+								for(var i=0; i<categoryList.length; i++) {
+									var categoryUpSeq = categoryList[i].categoryUpSeq;
+									if(categoryUpSeq == '26'){
+										categoryCultureList.push(categoryList[i]);
+									}
+								}
+								
+								var categoryCultureRowList=[];
+								for(var i=0; i<categoryList.length; i++) {
+									var categoryUpSeq = categoryList[i].categoryUpSeq;
+									for(var j=0; j<categoryCultureList.length; j++){
+										if(categoryCultureList[j].categorySeq == categoryUpSeq){
+											categoryCultureRowList.push(categoryList[i]);
+										}
+									}
+								}
+
+							for(var i=0; i<list.length; i++) {
+								
+								console.log(list[i] + '<br>');
+
+								var contentsTitle = list[i].contentsTitle;			// 컨텐츠 제목
+								var contentsId = list[i].contentsId;			    // 컨텐츠 아이디
+								var categoryCd = list[i].categoryCd1;				// 연도별카테고리 코드
+								var categoryName1 = list[i].categoryName1;				// 연도별 이름
+								var categoryCd2 = list[i].categoryCd2;			    // 디자인 사업 분류
+								var categoryName2 = list[i].categoryName2;			    // 디자인 사업 분류
+								var reprImgFileUrl = list[i].reprImgFileUrl;		// 썸네일 url
+								var contensViewUrl = list[i].contensViewUrl;	    // 상세 보기 페이지 url
+								var cultureName = '';
+								/*
+								for(var i=0; i<categoryCultureRowList.length; i++) {
+									var categorySeqNum = categoryCultureRowList[i].categorySeq;
+										if(categorySeqNum == categoryCd2){
+											for(var j=0; j<categoryCultureList.length; j++){
+												if(categoryCultureList[j].categorySeq == categoryCultureRowList[i].categoryUpSeq){
+													cultureName = categoryCultureList[j].categoryName;
+												}
+											}
+										}
+								}
+								*/
+								//중분류 코드로 대분류 찾기
+								html += '<li>';
+								html += '	<a href="javascript:;" class="sbj title goDetail" data-no="'+contentsId+'">';
+								html += '		<span class="img_box">';	 
+								html += '			<img class="for_web" src="https://seouldesign.or.kr/tigenweb'+reprImgFileUrl+'" alt="">';
+								html += '			<img class="for_mob" src="https://seouldesign.or.kr/tigenweb'+reprImgFileUrl+'" alt="">';
+								html += '		</span>';
+								html += '<div class="prog_sched_txt">';
+								html += '<div class="flag">';
+								html += '<p>'+categoryName2+'</p>';
+								html += '</div>';
+								html += '<strong>'+contentsTitle+'</strong>';
+								html += '<span>'+categoryName1+'</span>';
+								html += '</div>';
+								html += '</a>';
+								html += '<div class="share_btns">';
+								html += '<a class="btn_share" href="javascript:;" role="button" aria-label="공유하기">';
+								html += '</a>';
+								html += ' <!-- sns 팝업 -->';
+								html += '<div class="sns_pop prog_sched" style="display: none; opacity: 1;">';
+								html += '<i></i>';
+								html += '<a class="sns_pop_close" href="javascript:;" role="button" aria-label="팝업 닫기">팝업 닫기</a>';
+								html += '<strong>SNS 공유하기</strong>';
+								html += '<div class="sns_pop_btns">';
+								html += '<a class="fb" href="javascript:;" onclick="shareSNS(this, \''+contentsTitle+'\')" title="새창열림" role="button" aria-label="페이스북으로 공유하기">페이스북</a>';
+								html += '<a class="kt" href="javascript:;" onclick="shareSNS(this, \''+contentsTitle+'\')" title="새창열림" role="button" aria-label="카카오톡으로 공유하기">카카오톡</a>';
+								html += '<a class="tw" href="javascript:;" onclick="shareSNS(this, \''+contentsTitle+'\')" title="새창열림" role="button" aria-label="트위터로 공유하기">트위터</a>';
+								html += '<a class="bl" href="javascript:;" onclick="shareSNS(this, \''+contentsTitle+'\')" title="새창열림" role="button" aria-label="블로그로 공유하기">블로그</a>';
+								html += '</div>';
+								html += '<strong></strong>';
+								html += '<div class="url_copy">';
+								html += '<input readonly="readonly" title="URL" type="text" value="https://seouldesign.or.kr/?menuno=440&contents_id='+contentsId+'">';
+								html += '<a class="url_copy_btn" href="javascript:;" data-url="https://seouldesign.or.kr/?menuno=440&contents_id='+contentsId+'" >복사</a>';
+								html += '</div>';
+								html += '</div>';
+								html += ' <!-- sns 팝업 end -->';
+								html += '</div>';
+								html += '</li>';
+							}
+						
+							$('#archiveList').append(html);
+							$('.pagination_wrap').show();
+							var currentPage = $('#current_page').val();
+							var blockCount = 8;
+							var pageBlockSize =5;
+							paging2(count,currentPage,blockCount,pageBlockSize);
+							
+							},
+							error  : function (data, status, err) {
+								$('.loading-wrap').fadeOut();
+								alert('서버 통신 중 오류가 발생되었습니다.');
+							}
+							});
+
+				}else{
+					$("#no_arch_wrap").show(); //검색결과 없을시
+					$('#arch_wrap').hide();
+					$('.pagination_wrap').hide();
+				}
+		},
+		error  : function (data, status, err) {
+			$('.loading-wrap').fadeOut();
+			alert('서버 통신 중 오류가 발생되었습니다.');
+		}
+	});
+	
+}
+
+function searchDetailAjax(no) {	// 상세페이지 검색버튼 클릭 시, 
+	
+ 	var data = {};
+	data['current_page'] = $('#current_page').val();
+	data['keyword'] = $('#keyword').val();
+	data['category_cd1'] = $('#search_category_cd1').val();
+	data['category_cd2'] = $('#search_category_cd2').val();
+	data['category_type'] = $('#category_type').val();
+	data['meta_id'] = $('#meta_id').val();
+	data['meta_val'] = $('#meta_val').val();
+		$.ajax({
+			type : 'post',
+			url : '/archive/search.html',
+			data : data,
+			async : false, // 순차적 데이터 처리
+			success: function (result) { // $(selector).data(key) key를 생략하고 호출경우, 저장된 모든 data들이 json형식으로 리턴된다.
+
+				$('#archiveList').empty(); // archiveList 초기화
+				$('.loading-wrap').fadeOut(); // 로딩바 지우기
+				var status = result.status;		
+				if(status != 'EMPTY') {
+					$("#no_arch_wrap").hide(); //검색결과 있을 시에
+					$('#arch_wrap').show();
+					var list = result.apiContentsList;
+					var html = '';
+					var count = result.apiContentsListCount;
+					
+					 var data2 = {};
+					data2['up_seq'] = '26';
+
+					$.ajax({
+						type : 'post',
+						url : '/archive/categoryList.html',
+						data : data2,
+						async : false, // 순차적 데이터 처리
+						success: function (result) {
+							var categoryList = result.list;
+
+
+							for(var i=0; i<list.length; i++) {
+								
+								console.log(list[i] + '<br>');
+
+								var contentsTitle = list[i].contentsTitle;			// 컨텐츠 제목
+								var contentsId = list[i].contentsId;			    // 컨텐츠 아이디
+								var categoryCd = list[i].categoryCd1;				// 연도별카테고리 코드
+								var categoryName1 = list[i].categoryName1;				// 연도별 이름
+								var categoryCd2 = list[i].categoryCd2;			    // 디자인 사업 분류
+								var categoryName2 = list[i].categoryName2;			    // 디자인 사업 분류
+								var reprImgFileUrl = list[i].reprImgFileUrl;		// 썸네일 url
+								var contensViewUrl = list[i].contensViewUrl;	    // 상세 보기 페이지 url
+								var contensUpseq = list[i].categoryUpSeq2;	    // 상세 보기 페이지 url
+								/*
+								var cultureName = '';
+								for(var i=0; i<categoryList.length; i++){
+									var categorySeq = categoryList[i].categorySeq;
+									var categoryName = categoryList[i].categoryName;
+									if(categoryUpSeq == contensUpseq){
+										cultureName = categoryName;
+									}
+								}
+								*/
+								//중분류 코드로 대분류 찾기
+								html += '<li>';
+								html += '	<a href="javascript:;" class="sbj title goDetail" data-no="'+contentsId+'">';
+								html += '		<span class="img_box">';	 
+								html += '			<img class="for_web" src="https://seouldesign.or.kr/tigenweb'+reprImgFileUrl+'" alt="">';
+								html += '			<img class="for_mob" src="https://seouldesign.or.kr/tigenweb'+reprImgFileUrl+'" alt="">';
+								html += '		</span>';
+								html += '<div class="prog_sched_txt">';
+								html += '<div class="flag">';
+								html += '<p>'+categoryName2+'</p>';
+								html += '</div>';
+								html += '<strong>'+contentsTitle+'</strong>';
+								html += '<span>'+categoryName1+'</span>';
+								html += '</div>';
+								html += '</a>';
+								html += '<div class="share_btns">';
+								html += '<a class="btn_share" href="javascript:;" role="button" aria-label="공유하기">';
+								html += '</a>';
+								html += ' <!-- sns 팝업 -->';
+								html += '<div class="sns_pop prog_sched" style="display: none; opacity: 1;">';
+								html += '<i></i>';
+								html += '<a class="sns_pop_close" href="javascript:;" role="button" aria-label="팝업 닫기">팝업 닫기</a>';
+								html += '<strong>SNS 공유하기</strong>';
+								html += '<div class="sns_pop_btns">';
+								html += '<a class="fb" href="javascript:;" onclick="shareSNS(this, \''+contentsTitle+'\')" title="새창열림" role="button" aria-label="페이스북으로 공유하기">페이스북</a>';
+								html += '<a class="kt" href="javascript:;" onclick="shareSNS(this, \''+contentsTitle+'\')" title="새창열림" role="button" aria-label="카카오톡로 공유하기">카카오톡</a>';
+								html += '<a class="tw" href="javascript:;" onclick="shareSNS(this, \''+contentsTitle+'\')" title="새창열림" role="button" aria-label="트위터로 공유하기">트위터</a>';
+								html += '<a class="bl" href="javascript:;" onclick="shareSNS(this, \''+contentsTitle+'\')" title="새창열림" role="button" aria-label="블로그로 공유하기">블로그</a>';
+								html += '</div>';
+								html += '<strong></strong>';
+								html += '<div class="url_copy">';
+								html += '<input class="copyurl" readonly="readonly" type="text" value="https://seouldesign.or.kr/?menuno=440&contents_id='+contentsId+'">';
+								html += '<a class="url_copy_btn" href="javascript:;" data-url="https://seouldesign.or.kr/?menuno=440&contents_id='+contentsId+'" >복사</a>';
+								html += '</div>';
+								html += '</div>';
+								html += ' <!-- sns 팝업 end -->';
+								html += '</div>';
+								html += '</li>';
+							}
+						
+							$('#archiveList').append(html);
+							$('.pagination_wrap').show();
+							var currentPage = $('#current_page').val();
+							var blockCount = 8;
+							var pageBlockSize =5;
+							paging(count,currentPage,blockCount,pageBlockSize);
+
+					},
+					error  : function (data, status, err) {
+						$('.loading-wrap').fadeOut();
+						alert('서버 통신 중 오류가 발생되었습니다.');
+					}
+					});
+
+				}else{
+					$("#no_arch_wrap").show(); //검색결과 없을시
+					$('#arch_wrap').hide();
+					$('.pagination_wrap').hide();
+				}
+		},
+		error  : function (data, status, err) {
+			$('.loading-wrap').fadeOut();
+			alert('서버 통신 중 오류가 발생되었습니다.');
+		}
+	});
+	
+}
+
+function categoryList(data){ // depth01, 02 데이터 뿌리기
+
+				$.ajax({
+						type : 'post',
+						url : '/archive/categoryList.html',
+						data : data,
+						async : false, // 순차적 데이터 처리
+						success: function (result) {
+
+						// {"categorySeq":26,"categoryName":"디자인사업분류","categoryUpSeq":1}												
+						// depth01 대분류
+
+						/*상세검색 - 디자인사업분류 대분류*/
+						var categoryList = result.list;
+						var categoryDepth01 = '';
+						var categoryCultureList = [];
+						for(var i=0; i<categoryList.length; i++) {
+
+							var categorySeq = categoryList[i].categorySeq;
+							var categoryName = categoryList[i].categoryName;
+							var categoryUpSeq = categoryList[i].categoryUpSeq;
+
+							if(categoryUpSeq == '26'){
+								categoryDepth01	+='<li><a href="javascript:;" class="sType depth01" data-no="'+categorySeq+'">'+categoryName+'</a></li>';
+								categoryCultureList.push(categoryList[i]);
+							}
+						}
+						$('#category_depth01').html(categoryDepth01);
+						
+						/*상세검색 - 연도*/
+						var catagoryYearDepth01 = '';
+						var catagoryYearDepth02 = '';
+						var categoryYearList = [];
+						for(var i=0; i<categoryList.length; i++) {
+
+							var categorySeq = categoryList[i].categorySeq;
+							var categoryName = categoryList[i].categoryName;
+							var categoryUpSeq = categoryList[i].categoryUpSeq;
+							
+							if(categoryUpSeq == '9'){
+
+								//낮은 연도는 가장 높은 연도를 제외 시킨다.
+								if(categoryList[i].categorySeq != categoryList[categoryList.length-1].categorySeq){
+									catagoryYearDepth01	+='<li><a href="javascript:;"  class="sType depthYear01_under" data-no="'+categorySeq+'" >'+categoryName+'</a></li>';
+								}
+							
+								//높은 연도는 가장 낮은 연도를 제외시킨다.
+								if(categorySeq != '10'){
+									catagoryYearDepth02	+='<li><a href="javascript:;"  class="sType depthYear01_high" data-no="'+categorySeq+'" >'+categoryName+'</a></li>';
+								}
+								categoryYearList.push(categoryList[i]);
+							}
+						}
+						$('#catagory_year_depth01').html(catagoryYearDepth01);
+						$('#catagory_year_depth02').html(catagoryYearDepth02);
+						
+						//가장 낮은 연도 값 input 디폴트
+						$('#year_depth01').val(categoryYearList[0].categorySeq);
+						$('#year_under_no').val(categoryYearList[0].categorySeq);
+						$('#under_year_text').text(categoryYearList[0].categoryName);
+
+						//가장 높은 연도 값 input 디폴트
+						$('#year_depth02').val(categoryYearList[categoryYearList.length - 1].categorySeq);
+						$('#year_high_no').val(categoryYearList[categoryYearList.length - 1].categorySeq);
+						$('#high_year_text').text(categoryYearList[categoryYearList.length - 1].categoryName);
+												
+
+						/*하단 -  연도 탭*/
+						/*연도*/
+						var yearRowTap = '<div class="swiper-slide"><a id="year_row_tap_all" class="on" href="javascript:;" title="선택됨">전체</a></div>';
+						var yearRowTapMobile = '';
+						for(var i=categoryYearList.length-1; 0<=i; i--) {
+
+							var categorySeq = categoryYearList[i].categorySeq;
+							var categoryName = categoryYearList[i].categoryName;
+							var categoryUpSeq = categoryYearList[i].categoryUpSeq;
+
+								yearRowTap +='<div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="'+categorySeq+'" >'+categoryName+'</a></div>';
+								yearRowTapMobile += '<a href="javascript:;" class="sType year_row_tap_mobile" data-no="'+categorySeq+'">'+categoryName+'</a>';
+						}
+						$('#year_row_tap').html(yearRowTap);
+						$('#year_row_tap_mobile').html(yearRowTapMobile);
+
+						/*하단 - 디자인사업분류 대분류 , 중분류 모든 목록*/
+						var cultureRowTap = '<li><a class="on culture_row_tap_all" href="javascript:;" title="선택됨">전체</a></li>';
+						var cultureRowTap02 = '<li><a class="on culture_row_tap2_all" href="javascript:;" title="선택됨">전체</a></li>';
+						for(var i=0; i<categoryCultureList.length; i++) {
+							var categorySeq = categoryCultureList[i].categorySeq;
+							var categoryName = categoryCultureList[i].categoryName;
+							var categoryUpSeq = categoryCultureList[i].categoryUpSeq;						
+
+							cultureRowTap += '<li><a href="javascript:;" class="culture_row_tap" data-no="'+categorySeq+'" >'+categoryName+'</a></li>';
+							for(var j=0; j<categoryList.length; j++) {
+								var categorySeq02 = categoryList[j].categorySeq;
+								var categoryName02 = categoryList[j].categoryName;
+								var categoryUpSeq02 = categoryList[j].categoryUpSeq;		
+								if(categorySeq == categoryUpSeq02){
+									cultureRowTap02 += '<li><a href="javascript:;" class="culture_row_tap2" data-no="'+categorySeq02+'">'+categoryName02+'</a></li>';
+								}
+							}
+
+						}
+						$('#culture_row_tap').html(cultureRowTap);
+						$('#culture_row_tap02').html(cultureRowTap02);
+
+
+
+					},
+					error  : function (data, status, err) {
+						$('.loading-wrap').fadeOut();
+						alert('서버 통신 중 오류가 발생되었습니다.');
+					}
+				});
+}
+
+
+function metaList(data){ // 
+
+				$.ajax({
+						type : 'post',
+						url : '/archive/metaList.html',
+						data : data,
+						async : false, // 순차적 데이터 처리
+						success: function (result) {
+						
+						var metaList = result.list;
+
+						// 자료유형 담기
+						var typeMeatItem = [];
+						for(var i=0; i<metaList.length; i++) {
+							// {"metaId": "4","metaNm": "보도자료(URL)","metaYn": "Y", "itemList" : ""},
+							var metaId = metaList[i].metaId
+							var metaNm = metaList[i].metaNm
+							var metaYn = metaList[i].metaYn
+							var itemList = metaList[i].itemList
+							if(metaId == '5'){
+								typeMeatItem = itemList.replace(/\s/gi,'').split('||');
+							}
+
+						}
+						
+						/*상세 - 자료유형*/
+						var typeMeta = '<p class="srch_filter_chk"><input id="chk_all_type" type="checkbox"><label for="chk_all_type">전체</label></p>';
+						for(var i=0; i<typeMeatItem.length; i++) {
+							typeMeta += '<p class="srch_filter_chk"><input id="chk_type'+i+'" name="chk_type_meta" class="chk_type"  data-value="'+typeMeatItem[i]+'" type="checkbox"><label for="chk_type'+i+'">'+typeMeatItem[i]+'</label></p>';
+						}
+						$('#type_meta').html(typeMeta);
+
+					},
+					error  : function (data, status, err) {
+						$('.loading-wrap').fadeOut();
+						alert('서버 통신 중 오류가 발생되었습니다.');
+					}
+				});
+}
+
+//대분류 클릭시 에
+function getcultureRowTap(no){
+		var no = no;
+		$.ajax({
+			type : 'post',
+			url : '/archive/categoryList.html',
+			data : {'up_seq' : no},
+			async : false, // 순차적 데이터 처리
+			success: function (result) {
+			
+			//중분류 다시 뿌려주기
+			var cultureRowTapList = result.list;
+			var cultureRowTap = '<li><a href="javascript:;" class="on culture_row_tap2_all" data-no="'+no+'" title="선택됨">전체</a></li>';
+			var cultureRowTapNo = '';
+			for(var i = 0; i < cultureRowTapList.length; i++){
+				var categorySeq = cultureRowTapList[i].categorySeq;
+				var categoryName = cultureRowTapList[i].categoryName;
+				var categoryUpSeq = cultureRowTapList[i].categoryUpSeq;
+
+				if(i == 0){
+					cultureRowTap += '<li><a href="javascript:;" class="culture_row_tap2" data-no="'+categorySeq+'">'+categoryName+'</a></li>';
+					cultureRowTapNo += categorySeq;
+				}else{
+					cultureRowTap += '<li><a href="javascript:;" class="culture_row_tap2" data-no="'+categorySeq+'">'+categoryName+'</a></li>';
+					cultureRowTapNo += '||' + categorySeq;
+				}
+			}
+			$('#culture_row_tap02').html(cultureRowTap);
+			$('#culture_row_tap_no').val(cultureRowTapNo);
+	
+
+		},
+		error  : function (data, status, err) {
+			$('.loading-wrap').fadeOut();
+			alert('서버 통신 중 오류가 발생되었습니다.');
+		}
+		});
+}
+
+//조립 메소드
+function setCategoryCd(topNum){
+	$('culture_row_tap_no').val(topNum);
+}
+
+function settingCategoryCd(no,no2){
+
+	//var str = settingPipeLine(no,no2);
+	$('#category_cd1').val('');
+	$('#category_cd2').val('');
+	$('#category_cd1').val(no);
+	$('#category_cd2').val(no2);
+}
+
+function settingPipeLine(no,no2){
+	var num = '';
+
+	if(no == ''){
+		num = no2;
+	}
+	
+	if(no2 == ''){
+		num = no;
+	}
+
+	if(no != '' && no2 != ''){
+		num = no + '||' + no2
+	}
+
+	
+	return num;
+}
+
+$(function(){
+	var arch_swiper = new Swiper(".arch_search .sub_tabs_wrap .swiper-container", {
+    	slidesPerView: 'auto',
+    	spaceBetween: 0,
+    	freeMode: true,
+    	navigation: {
+        	nextEl: ".arch_search .sub_tabs_wrap .swiper-button-next",
+        	prevEl: ".arch_search .sub_tabs_wrap .swiper-button-prev",
+    	}
+	});
+
+	categoryList(null);
+	metaList(null);
+	cultureRowTapAllSetting();
+	yearRowTapAllSetting();
+	searchAjax(null);
+	arch_swiper.update();
+	
+	var yearMove = $('#year_move').val();
+
+
+	// 23-01-30 추가 (2022년 디폴트)
+	var moveAll = $('#move_all').val();
+
+	if(yearMove == '' || yearMove == 'null'){
+		yearMove = '49';
+	}
+
+	if(moveAll == '0'){
+		yearMove = '';
+	}
+
+	if(yearMove != '' && yearMove != 'null'){
+			var categoryCd = yearMove;
+			$('#year_row_tap_no').val(categoryCd);
+			tapAjax();
+
+		//기존 on 지우기
+		$(document).find('.year_row_tap').each(function(index,item){
+			$(this).removeClass('on');
+			$(this).removeAttr('title');
+
+			var no = $(this).data('no');
+			if(no == yearMove){
+				$(this).addClass('on');
+				$(this).attr('title', '선택됨');
+			}
+		});
+		$('#year_row_tap_all').removeClass('on');
+		$('#year_row_tap_all').removeAttr('title');
+
+	}
+
+	var tapMove = $('#tap_move').val();
+	if(tapMove != '' && tapMove != 'null'){
+		cateMoveSetting(tapMove);
+
+
+	/*
+	*/
+	}
+
+});
+
+/*-----------------------------------------------------------------------클릭이벤트 */
+/*
+$(document).on("click", ".detail_depth01", function(){
+    var categoryseq = $(this).data('categoryseq');
+	$('#detail_depth01').val(categoryseq);
+});
+	
+$(document).on("click", ".detail_depth02", function(){
+    var categoryseq = $(this).data('categoryseq');
+	$('detail_depth02').val(categoryseq);
+});
+*/
+
+/*연도 탭 클릭*/
+$(document).on('click','.year_row_tap',function(){
+	var no = $(this).data('no');
+	$('#year_row_tap_no').val(no);
+	yearRowtapSetting();
+	$(this).addClass('on');
+	$(this).attr('title', '선택됨');
+
+	var currentPage = $('#current_page').val();
+	var categoryCd = $('#year_row_tap_no').val();
+
+	tapAjax();
+
+});
+
+/*연도 탭 클릭*/
+$(document).on('click','.year_row_tap_mobile',function(){
+	var no = $(this).data('no');
+	var text = $(this).text();
+	$('#year_row_tap_mobile_all').text(text);
+	$('#year_row_tap_no').val(no);
+	yearRowtapSetting();
+	$(this).addClass('on');
+	$(this).attr('title', '선택됨');
+	
+
+	var currentPage = $('#current_page').val();
+	var categoryCd = $('#year_row_tap_no').val();
+
+	tapAjax();
+
+});
+
+function yearRowtapSetting(){
+	//기존 on 지우기
+	$(document).find('.year_row_tap').each(function(index,item){
+		$(this).removeClass('on');
+		$(this).removeAttr('title');
+	});
+	$('#year_row_tap_all').removeClass('on');
+	$('#year_row_tap_all').removeAttr('title');
+	//초기화
+	$('#current_page').val(1);
+}
+
+
+
+/*디자인사업분류 대분류 탭클릭*/
+$(document).on('click','.culture_row_tap',function(){
+	var no = $(this).data(no).no;
+	$('#culture_row_tap_no').val(no);
+	cultureRowTapSetting(no);
+	$(this).addClass('on');
+	$(this).attr('title', '선택됨');
+
+	// 해당 중분류 가져오기 
+	getcultureRowTap(no);
+	tapAjax();
+});
+
+function cultureRowTapSetting(){
+	//기존 on 지우기
+	$(document).find('.culture_row_tap').each(function(index,item){
+		$(this).removeClass('on');
+		$(this).removeAttr('title');
+	});
+	$('.culture_row_tap_all').removeClass('on');
+	$('.culture_row_tap_all').removeAttr('title');
+	
+	$('#current_page').val(1);
+}
+
+/*디자인사업분류 중분류 탭클릭*/
+$(document).on('click','.culture_row_tap2',function(){
+	var no = $(this).data(no).no;
+
+	//기존 on 지우기
+	$(document).find('.culture_row_tap2').each(function(index,item){
+		$(this).removeClass('on');
+		$(this).removeAttr('title');
+	});
+	$('.culture_row_tap2_all').removeClass('on');
+	$('.culture_row_tap2_all').removeAttr('title');
+
+	$(this).addClass('on');
+	$(this).attr('title', '선택됨');
+
+	$('#culture_row_tap_no').val(no);
+	$('#current_page').val(1);
+	tapAjax();
+});
+
+/*디자인사업분류 대분류 전체 탭클릭*/
+$(document).on('click','.culture_row_tap_all',function(){
+	$('#culture_row_tap_no').val('');
+
+	var no = $(this).data('no');
+	cultureRowTapAllSetting();
+	tapAjax();
+});
+
+/*디자인사업분류 연도 전체 탭클릭*/
+$(document).on('click','#year_row_tap_all',function(){
+	$('#year_row_tap_no').val('');
+	yearRowTapAllSetting();
+	tapAjax();
+});
+
+function yearRowTapAllSetting(){
+	var data = {};
+	data['up_seq'] = '9';
+	
+	$.ajax({
+			type : 'post',
+			url : '/archive/categoryList.html',
+			data : data,
+			async : false, // 순차적 데이터 처리
+			success: function (result) {
+
+			//class on 정리
+			$(document).find('.year_row_tap').each(function(index,item){
+				$(this).removeClass('on');
+				$(this).removeAttr('title');
+			});
+
+			$('#year_row_tap_all').addClass('on');
+			$('#year_row_tap_all').attr('title', '선택됨');
+
+
+			/*상세검색 - 디자인사업분류 대분류*/
+			var categoryList = result.list;
+			var categoryDepth01 = '';
+			var categoryYears = '';
+			for(var i=0; i<categoryList.length; i++) {
+				var categorySeq = categoryList[i].categorySeq;		
+				if(i == 0){
+					categoryYears += categorySeq;
+				}
+				if(i != 0){
+					categoryYears += '||' + categorySeq;
+				}
+			}
+
+			$('#year_row_tap_no').val(categoryYears);
+
+		},
+		error  : function (data, status, err) {
+			$('.loading-wrap').fadeOut();
+			alert('서버 통신 중 오류가 발생되었습니다.');
+		}
+	});
+}
+
+function cateMoveSetting(tapMove){
+	$.ajax({
+			type : 'post',
+			url : '/archive/categoryList.html',
+			async : false, // 순차적 데이터 처리
+			success: function (result) {
+
+			//대분류 여부
+			var mainCate = false;
+			var mainCateUpSeq = 26;
+			var categoryList = result.list;
+			
+			//대분류 넘버
+			var cateUpSeq = tapMove;
+			for(var i=0; i < categoryList.length; i++){
+
+				var categoryUpSeq = categoryList[i].categoryUpSeq;
+				var categorySeq = categoryList[i].categorySeq;
+				if( categoryUpSeq == mainCateUpSeq && categorySeq == tapMove){
+					mainCate = true;
+				}
+			}
+			
+			//중분류일 경우 중분류의 부모 넘버 셋팅
+			if(!mainCate){
+				for(var i=0; i < categoryList.length; i++){
+					var categoryUpSeq = categoryList[i].categoryUpSeq;
+					var categorySeq = categoryList[i].categorySeq;
+					if(categorySeq == tapMove){
+						cateUpSeq = categoryUpSeq;
+					}
+				}
+			}
+			
+			//대분류 준비
+			$('#culture_row_tap_no').val(cateUpSeq);
+			cultureRowTapSetting(cateUpSeq);
+
+			$(document).find('.culture_row_tap').each(function(index,item){
+				var no = $(this).data('no');
+				if(no == cateUpSeq){
+					$(this).addClass('on');
+					$(this).attr('title', '선택됨');
+				};
+			});
+			getcultureRowTap(cateUpSeq);
+			
+			if(!mainCate){
+				$('.culture_row_tap2_all').removeClass('on');
+				$('.culture_row_tap2_all').removeAttr('title');
+				$('#culture_row_tap_no').val(tapMove);
+				
+				$(document).find('.culture_row_tap2').each(function(index,item){
+					var no = $(this).data('no');
+					if(no == tapMove){
+						$(this).addClass('on')
+						$(this).attr('title', '선택됨');
+					};
+				});
+			}
+			$('#current_page').val(1);
+			tapAjax();
+		},
+		error  : function (data, status, err) {
+			$('.loading-wrap').fadeOut();
+			alert('서버 통신 중 오류가 발생되었습니다.');
+		}
+	});
+}
+
+//디자인문화분류 대분류 탭 세팅
+function cultureRowTapAllSetting(){
+
+	$.ajax({
+			type : 'post',
+			url : '/archive/categoryList.html',
+			data : data,
+			async : false, // 순차적 데이터 처리
+			success: function (result) {
+
+			//class on 정리
+			$(document).find('.culture_row_tap').each(function(index,item){
+				$(this).removeClass('on');
+				$(this).removeAttr('title');
+			});
+
+			$('.culture_row_tap_all').addClass('on');
+			$('.culture_row_tap_all').attr('title', '선택됨');
+
+			/*상세검색 - 디자인사업분류 대분류*/
+			var categoryList = result.list;
+			var categoryDepth01 = '';
+			var categoryCultureList = [];
+			//대분류 카테고리 - 전체
+			for(var i=0; i<categoryList.length; i++) {
+				var categoryUpSeq = categoryList[i].categoryUpSeq;
+				if(categoryUpSeq == '26'){
+					categoryCultureList.push(categoryList[i]);
+					
+				}
+			}
+
+			
+			/*하단 - 디자인사업분류 대분류 , 중분류 모든 목록*/
+			var cultureRowTap02 = '<li><a class="on culture_row_tap2_all" href="javascript:;" title="선택됨">전체</a></li>';
+			var cultureRowTapNoList = [];
+			for(var i=0; i<categoryCultureList.length; i++) {
+
+				var categorySeq = categoryCultureList[i].categorySeq;
+				for(var j=0; j<categoryList.length; j++) {
+					var categorySeq02 = categoryList[j].categorySeq;
+					var categoryName02 = categoryList[j].categoryName;
+					var categoryUpSeq02 = categoryList[j].categoryUpSeq;		
+					if(categorySeq == categoryUpSeq02){
+						cultureRowTap02 += '<li><a href="javascript:;" class="culture_row_tap2" data-no="'+categorySeq02+'">'+categoryName02+'</a></li>';
+						cultureRowTapNoList.push(categorySeq02);
+					}
+				}
+			}
+			
+			var cultureRowTapNos =  cultureRowTapNoList.join('||');
+
+			$('#culture_row_tap02').html(cultureRowTap02);
+			$('#culture_row_tap_no').val(cultureRowTapNos);
+
+		},
+		error  : function (data, status, err) {
+			$('.loading-wrap').fadeOut();
+			alert('서버 통신 중 오류가 발생되었습니다.');
+		}
+	});
+}
+
+//디자인문화분류 텝 클릭시
+function cultureRowTap2AllSetting(no){
+
+	var data = {};
+	if(no !== undefined && no != ''){
+		data['up_seq'] = no;
+	}
+	if(no === undefined || no == ''){
+		//data['up_seq'] = '26';
+	}
+	$.ajax({
+			type : 'post',
+			url : '/archive/categoryList.html',
+			data : data,
+			async : false, // 순차적 데이터 처리
+			success: function (result) {
+
+			//class on 정리
+			$(document).find('.culture_row_tap2').each(function(index,item){
+				$(this).removeClass('on');
+				$(this).removeAttr('title');
+			});
+
+			$('.culture_row_tap2_all').addClass('on');
+			$('.culture_row_tap2_all').attr('title', '선택됨');
+
+			/*상세검색 - 디자인사업분류 중분류*/
+			var categoryList = result.list;
+			var categoryDepth01 = '';
+			var categoryCultureList = [];
+
+			for(var i=0; i<categoryList.length; i++) {
+				var categoryUpSeq = categoryList[i].categoryUpSeq;
+					categoryCultureList.push(categoryList[i]);
+			}
+			/*하단 - 디자인사업분류 대분류 , 중분류 모든 목록*/
+
+			var cultureRowTapNoList = [];
+			var cultureRowTapNos = '';
+			for(var i=0; i<categoryCultureList.length; i++) {
+				var categorySeq = categoryCultureList[i].categorySeq;
+				cultureRowTapNoList.push(categorySeq);
+			}
+			
+			cultureRowTapNos = cultureRowTapNoList.join('||');
+
+			$('#culture_row_tap_no').val(cultureRowTapNos);
+
+		},
+		error  : function (data, status, err) {
+			$('.loading-wrap').fadeOut();
+			alert('서버 통신 중 오류가 발생되었습니다.');
+		}
+	});
+}
+
+/*디자인사업분류 중분류 전체 탭클릭*/
+$(document).on('click','.culture_row_tap2_all',function(){
+	
+	//class on 정리
+	$(document).find('.culture_row_tap2').each(function(index,item){
+		$(this).removeClass('on');
+		$(this).removeAttr('title');
+	});
+	var no = $(this).data('no');
+	cultureRowTap2AllSetting(no);
+	$('.culture_row_tap2_all').addClass('on');
+	$('#current_page').val(1);
+	tapAjax();
+
+});
+
+//디자인 분류 대분류
+$(document).on('click','.depth01',function(){
+		var depth01CategorySeq = $(this).data('no');
+		$('#detail_depth01').val(depth01CategorySeq);
+		$.ajax({
+			type : 'post',
+			url : '/archive/categoryList.html',
+			async : false, // 순차적 데이터 처리
+			success: function (result) {
+
+			// {"categorySeq":26,"categoryName":"디자인사업분류","categoryUpSeq":1}												
+			// depth01 대분류
+			var categoryList = result.list;
+
+
+			var categoryDepth02 =  '<div class="srch_filter_each z_ind_ct"><a href="javascript:;" class="sTypeBtn"  title="디자인사업 중분류 선택">중분류를 선택해주세요.<span class="blind">축소됨</span></a>';
+				categoryDepth02 +=  '<ul class="common_filter_list">';
+			
+			for(var i = 0 ; i < categoryList.length; i++){
+
+				var categorySeq = categoryList[i].categorySeq;
+				var categoryName = categoryList[i].categoryName;
+				var categoryUpSeq = categoryList[i].categoryUpSeq;
+
+				if(depth01CategorySeq == categoryUpSeq){
+					categoryDepth02 +=  '<li><a href="javascript:;" class="sType depth02" data-no="'+categorySeq+'" >'+categoryName+'</a></li>';
+				}
+			}
+			categoryDepth02 +=  '</ul></div>';
+			
+			$('#category_depth02').html(categoryDepth02);
+			$('#detail_depth02').val('');
+
+		},
+		error  : function (data, status, err) {
+			$('.loading-wrap').fadeOut();
+			alert('서버 통신 중 오류가 발생되었습니다.');
+		}
+	});
+
+});
+
+//디자인 분류 중분류
+$(document).on('click','.depth02',function(){
+	var depth02CategorySeq = $(this).data('no');
+	$('#detail_depth02').val(depth02CategorySeq);
+
+});
+
+$(document).on('click','.depthYear01_under',function(){
+	var yearUnderNo = $(this).data('no');
+	
+	$('#year_under_no').val(yearUnderNo);
+});
+
+$(document).on('click','.depthYear01_high',function(){
+	var yearHighNo = $(this).data('no');
+	
+	$('#year_high_no').val(yearHighNo);
+});
+
+//detail 이동
+$(document).on('click','.goDetail',function(){
+	var contentsId = $(this).data('no');
+	
+	$('#contents_id').val(contentsId);
+
+	$('#form').submit();
+});
+
+
+// 검색, 상세검색 시 사용
+$(document).on('click','.pageing',function(){
+	
+	var currentPage = $(this).data('no');
+	var encType = '';
+	var contentsId = '';
+	var blockCount = '';
+	// 컨텐츠 다시 불러오기 이벤트
+	var keyword = $('#keyword').val();
+	$('#current_page').val(currentPage);
+
+	var data = {};
+	data['current_page'] = currentPage;
+	data['keyword'] = keyword;
+
+	searchAjax(data);
+});
+
+// 탭 검색시 사용
+$(document).on('click','.pageing2',function(){
+	
+	var currentPage = $(this).data('no');
+	var encType = '';
+	var contentsId = '';
+	var blockCount = '';
+	// 컨텐츠 다시 불러오기 이벤트
+	$('#current_page').val(currentPage);
+
+
+	tapAjax();
+});
+
+
+// totalCnt : 컨텐츠 총 갯수 , currentPage : 현재페이지, blockCount : 한페이지랑 표시 될 컨텐츠의 수, pageBlockSize : 한 페이지에 표시 될 페이징 수
+function paging(totalCnt,currentPage,blockCount,pageBlockSize){
+	var pageNum = Number(currentPage);
+	var totalCnt = Number(totalCnt);
+	var pageRowSize = Number(blockCount);
+	var pageBlockSize = Number(pageBlockSize);
+	var beforePage = pageNum - 1;
+		beforePage = beforePage == 0 ? 1 : beforePage;
+	var afterPage = pageNum + 1;
+	var totalPage = Math.floor(totalCnt / pageRowSize);
+	if(totalCnt % pageRowSize != 0) {
+		totalPage += 1;
+	}
+	var startPage = (Math.floor(((pageNum - 1) / pageBlockSize)) * pageBlockSize) + 1;
+	var test = pageNum - 1 + pageBlockSize ;
+	var test2 = test / pageBlockSize;
+	var endPage = (Math.floor(((pageNum - 1) + pageBlockSize) / pageBlockSize)) * pageBlockSize;
+
+	if(totalPage <= endPage) {
+		endPage = totalPage;
+	}
+
+	var pagination_wrap_html = '';
+	//이전 페이지
+	if(beforePage == pageNum){
+		pagination_wrap_html += '<p class="prev_first"><span><span class="blind">처음</span></span></p>';
+		pagination_wrap_html += '	<p class="prev"><span><span class="blind">이전</span></span></p>';
+	}else{
+		pagination_wrap_html += '<p class="prev_first"><a class="pageing" href="javascript:;" data-no="1" data-total="'+totalCnt+'" ><span class="blind">처음</span></a></p>';
+		pagination_wrap_html += '	<p class="prev"><a class="pageing" href="javascript:;" data-no="'+beforePage+'" data-total="'+totalCnt+'" ><span class="blind">이전</span></a></p>';
+	}
+	pagination_wrap_html += '	<ol>';
+
+	//class="on"
+	for(var i = startPage; i <= endPage; i++){
+		pagination_wrap_html += '	<li><a href="javascript:;" class="pageing" data-no="'+i+'" data-total="'+totalCnt+'" >'+i+'</a></li>';
+	}
+	pagination_wrap_html += '	</ol>';
+
+	//다음페이지
+	if(totalPage ==  pageNum){
+		pagination_wrap_html += '	<p class="next"><span><span class="blind">다음</span></span></p>';
+		pagination_wrap_html += '	<p class="next_last"><span><span class="blind">마지막</span></span></p>'; 
+	}else{
+		pagination_wrap_html += '	<p class="next"><a class="pageing" href="javascript:;"  data-no="'+afterPage+'" data-total="'+totalCnt+'" ><span class="blind">다음</span></a></p>';
+		pagination_wrap_html += '	<p class="next_last"><a class="pageing" href="javascript:;" data-no="'+totalPage+'" data-total="'+totalCnt+'" ><span class="blind">마지막</span></a></p>'; 
+	}
+
+	//2) 페이징 append
+	$('#pagination_wrap').html(pagination_wrap_html);
+
+	//3) 현재페이지 action(class="on") 주기 
+	$(document).find('.pageing').each(function(index,item){
+		var no = $(this).data('no');
+		if(no == currentPage){
+			$(this).addClass('on');
+			if(!$(this).find('.blind').length) $(this).append('<span class="blind">현재 페이지</span>');
+		}
+	});
+}
+
+// totalCnt : 컨텐츠 총 갯수 , currentPage : 현재페이지, blockCount : 한페이지랑 표시 될 컨텐츠의 수, pageBlockSize : 한 페이지에 표시 될 페이징 수
+function paging2(totalCnt,currentPage,blockCount,pageBlockSize){
+	var pageNum = Number(currentPage);
+	var totalCnt = Number(totalCnt);
+	var pageRowSize = Number(blockCount);
+	var pageBlockSize = Number(pageBlockSize);
+	var beforePage = pageNum - 1;
+		beforePage = beforePage == 0 ? 1 : beforePage;
+	var afterPage = pageNum + 1;
+	var totalPage = Math.floor(totalCnt / pageRowSize);
+	if(totalCnt % pageRowSize != 0) {
+		totalPage += 1;
+	}
+	var startPage = (Math.floor(((pageNum - 1) / pageBlockSize)) * pageBlockSize) + 1;
+	var test = pageNum - 1 + pageBlockSize ;
+	var test2 = test / pageBlockSize;
+	var endPage = (Math.floor(((pageNum - 1) + pageBlockSize) / pageBlockSize)) * pageBlockSize;
+
+	if(totalPage <= endPage) {
+		endPage = totalPage;
+	}
+
+	var pagination_wrap_html = '';
+	//이전 페이지
+	if(beforePage == pageNum){
+		pagination_wrap_html += '<p class="prev_first"><span><span class="blind">처음</span></span></p>';
+		pagination_wrap_html += '	<p class="prev"><span><span class="blind">이전</span></span></p>';
+	}else{
+		pagination_wrap_html += '<p class="prev_first"><a class="pageing2" href="javascript:;" data-no="1" data-total="'+totalCnt+'" ><span class="blind">처음</span></a></p>';
+		pagination_wrap_html += '	<p class="prev"><a class="pageing2" href="javascript:;" data-no="'+beforePage+'" data-total="'+totalCnt+'" ><span class="blind">이전</span></a></p>';
+	}
+	pagination_wrap_html += '	<ol>';
+
+	//class="on"
+	for(var i = startPage; i <= endPage; i++){
+		pagination_wrap_html += '	<li><a href="javascript:;" class="pageing2" data-no="'+i+'" data-total="'+totalCnt+'" >'+i+'</a></li>';
+	}
+	pagination_wrap_html += '	</ol>';
+
+	//다음페이지
+	if(totalPage ==  pageNum){
+	pagination_wrap_html += '	<p class="next"><span><span class="blind">다음</span></span></p>';
+		pagination_wrap_html += '	<p class="next_last"><span><span class="blind">마지막</span></span></p>'; 
+	}else{
+		pagination_wrap_html += '	<p class="next"><a class="pageing2" href="javascript:;"  data-no="'+afterPage+'" data-total="'+totalCnt+'" ><span class="blind">다음</span></a></p>';
+		pagination_wrap_html += '	<p class="next_last"><a class="pageing2" href="javascript:;" data-no="'+totalPage+'" data-total="'+totalCnt+'" ><span class="blind">마지막</span></a></p>'; 
+	}
+
+	//2) 페이징 append
+	$('#pagination_wrap').html(pagination_wrap_html);
+
+	//3) 현재페이지 action(class="on") 주기 
+	$(document).find('.pageing2').each(function(index,item){
+		var no = $(this).data('no');
+		if(no == currentPage){
+			$(this).addClass('on');
+			if(!$(this).find('.blind').length) $(this).append('<span class="blind">현재 페이지</span>');
+		}
+	});
+}
+
+</script>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>아카이브 검색 &lt; 아카이브 | 서울디자인재단</title>
+
+<div class="sub_cont_wrap">
+    <div class="sub_cont_inner arch_search">
+
+        <h3 class="sub_cont_ttl">아카이브 검색</h3>
+
+        <div class="arch_submit_cont_wrap">
+
+            <div class="people_search_wrap arch_search_box">
+                <div class="arch_search_text">
+                    <p>키워드 검색</p>
+                </div>
+                <div class="people_search_input">
+                    <input id="keyword" class="wp150" type="text" value="" onkeyup="enterkey()" placeholder="검색어를 입력해주세요." autocomplete="off" title="검색어 입력">
+                    <a href="javascript:;" id="btn_keyword_srch" class="webtong-btn filled basic">검색</a>
+                </div>
+                <div class="arch_search_toggle_wrap"><a href="javascript:;" class="arch_search_toggle">상세검색<span class="blind">축소됨</span></a></div>
+            </div>
+            <form action="javascript:;">
+                <ul class="arch_search_warp">
+                    <li>
+                        <div class="arch_search_box">
+                            <div class="arch_search_text">
+                                <strong>디자인사업분류</strong>
+                            </div>
+                            <div class="input_wrap">
+                                <div class="srch_filter_each z_ind_ct" id="category_depth01_box">
+                                    <input type="hidden" id="detail_depth01" name="detail_depth01" value=""> 
+                                    <a href="javascript:;" class="sTypeBtn">대분류를 선택해주세요.<span class="blind">축소됨</span></a>
+                                    <ul class="common_filter_list" id="category_depth01">
+                                        <li><a href="javascript:;" class="sType depth01" data-no="27">디자인문화 선도</a></li>
+                                        <li><a href="javascript:;" class="sType depth01" data-no="28">디자인산업 경쟁력 강화</a></li>
+                                        <li><a href="javascript:;" class="sType depth01" data-no="29">디자인가치 공유 확산</a></li>
+                                        <li><a href="javascript:;" class="sType depth01" data-no="30">재단일반</a></li></ul>
+                                </div>
+                                <input type="hidden" id="detail_depth02" name="detail_depth02" value=""> 
+                                <div id="category_depth02">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="arch_search_box">
+                            <div class="arch_search_text">
+                                <span class="for_pc">생산연도</span> 
+                                <span class="for_mob">연도</span>
+                            </div>
+                            <div class="input_wrap">
+                                 <input id="year_depth01" type="hidden" value="10">
+                                <div class="srch_filter_each srch_filter_year">
+                                    <a href="javascript:;" class="sTypeBtn" id="under_year_text">2008</a>
+                                    <ul class="common_filter_list" id="catagory_year_depth01">
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="10">2008</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="11">2009</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="12">2010</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="13">2011</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="14">2012</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="15">2013</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="16">2014</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="17">2015</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="18">2016</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="19">2017</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="20">2018</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="21">2019</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="22">2020</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="23">2021</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_under" data-no="24">2022</a></li>
+                                    </ul>
+                                </div>
+                                <div class="tilde">
+                                    <p>~</p>
+                                </div>
+                                 <input id="year_depth02" type="hidden" value="49">
+                                <div class="srch_filter_each srch_filter_year">
+                                    <a href="javascript:;" class="sTypeBtn" id="high_year_text">2023</a>
+                                    <ul class="common_filter_list" id="catagory_year_depth02">
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="11">2009</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="12">2010</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="13">2011</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="14">2012</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="15">2013</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="16">2014</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="17">2015</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="18">2016</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="19">2017</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="20">2018</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="21">2019</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="22">2020</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="23">2021</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="24">2022</a></li>
+                                        <li><a href="javascript:;" class="sType depthYear01_high" data-no="49">2023</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!--<li>
+                        <div class="arch_search_box">
+                            <div class="arch_search_text arch_search_chk">
+                                <span>유형</span>
+                            </div>
+                            <div class="input_wrap arch_chk" id="type_meta">
+                            </div>
+                        </div>
+                    </li>-->
+                    <li>
+                        <div class="find_result_btns">
+                            <button type="button" id="btn_detail_search" class="black" href="javascript:;">검색</button>
+                            <button type="reset" id="btn_detail_reset" class="white" href="javascript:;">초기화</button>
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+
+        <div class="sub_tabs_wrap">
+           <div class="for_pc">
+                <div class="swiper-container swiper-container-horizontal swiper-container-free-mode">
+                    <div class="swiper-wrapper" id="year_row_tap" style="transform: translate3d(0px, 0px, 0px);">
+                        <div class="swiper-slide swiper-slide-active">
+                            <a id="year_row_tap_all" class="" href="javascript:;">전체</a></div>
+                        <div class="swiper-slide swiper-slide-next">
+                            <a href="javascript:;" class="year_row_tap on" data-no="49">2023<span class="blind">선택됨</span></a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="24">2022</a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="23">2021</a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="22">2020</a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="21">2019</a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="20">2018</a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="19">2017</a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="18">2016</a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="17">2015</a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="16">2014</a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="15">2013</a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="14">2012</a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="13">2011</a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="12">2010</a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="11">2009</a></div>
+                            <div class="swiper-slide"><a href="javascript:;" class="year_row_tap" data-no="10">2008</a></div>
+                        </div>
+                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+                  <button class="swiper-button-prev swiper-button-disabled" tabindex="0" role="button" aria-label="Previous slide" aria-disabled="true"><span class="blind">이전</span></button>
+                <button class="swiper-button-next" tabindex="0" role="button" aria-label="Next slide" aria-disabled="false"><span class="blind">다음</span></button>
+              </div>
+            <div class="select mob">
+                <div class="people_search_wrap">
+                    <div class="people_search_select">
+                        <a href="javascript:;" id="year_row_tap_mobile_all">전체<span class="blind">축소됨</span></a>
+                        <div class="people_srch_sel_list" style="display: none;" id="year_row_tap_mobile">
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="49">2023</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="24">2022</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="23">2021</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="22">2020</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="21">2019</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="20">2018</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="19">2017</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="18">2016</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="17">2015</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="16">2014</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="15">2013</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="14">2012</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="13">2011</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="12">2010</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="11">2009</a>
+                            <a href="javascript:;" class="sType year_row_tap_mobile" data-no="10">2008</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="floor_map_tabs">
+            <ul id="culture_row_tap">
+                <li><a class="on culture_row_tap_all" href="javascript:;">전체</a></li>
+                <li><a href="javascript:;" class="culture_row_tap" data-no="27">디자인문화 선도</a></li>
+                <li><a href="javascript:;" class="culture_row_tap" data-no="28">디자인산업 경쟁력 강화</a></li>
+                <li><a href="javascript:;" class="culture_row_tap" data-no="29">디자인가치 공유 확산</a></li>
+                <li><a href="javascript:;" class="culture_row_tap" data-no="30">재단일반</a></li>
+            </ul>
+        </div>
+
+        <div class="sub_tab_category">
+            <div>
+                <ul id="culture_row_tap02">
+                    <li><a class="on culture_row_tap2_all" href="javascript:;">전체</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="31">전시</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="32">행사</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="33">포럼</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="34">네트워크(도시/기관/기업)</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="35">서울디자인</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="36">DDP디자인페어</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="37">컨설팅</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="38">개발</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="39">창업</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="40">마케팅</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="41">디자인어워드</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="42">연구</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="43">교육</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="44">출판</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="45">인물/컬렉션</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="46">포럼/세미나/디자인운동</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="47">주요연혁</a></li>
+                    <li><a href="javascript:;" class="culture_row_tap2" data-no="48">DDP</a></li>
+                </ul>
+            </div>
+        </div>
+      
+            <div class="pagination_wrap" id="pagination_wrap">
+                <p class="prev_first">
+                    <a class="" href="#" onclikc="return false;">처음</a>
+                </p>	
+                <p class="prev">
+                    <a class="" href="#" onclikc="return false;">이전</a>
+                </p>	
+                <ol>	
+                    <li>
+                        <a href="javascript:;" class="pageing2 on" data-no="1" data-total="45">1</a>
+                    </li>	
+                    <li>
+                        <a href="javascript:;" class="pageing2" data-no="2" data-total="45">2</a>
+                    </li>	
+                    <li>
+                        <a href="javascript:;" class="pageing2" data-no="3" data-total="45">3</a>
+                    </li>	
+                    <li>
+                        <a href="javascript:;" class="pageing2" data-no="4" data-total="45">4</a>
+                    </li>	
+                    <li>
+                        <a href="javascript:;" class="pageing2" data-no="5" data-total="45">5</a>
+                    </li>	
+                </ol>	
+                <p class="next">
+                    <a class="pageing2" href="javascript:;" data-no="2" data-total="45">다음</a>
+                    </p>	
+                    <p class="next_last">
+                        <a class="pageing2" href="javascript:;" data-no="6" data-total="45">마지막</a>
+                    </p>
+                </div>
+            <!--/paging-->
+
+        </div>
+    </div>
+</div>
